@@ -8,6 +8,8 @@
 #ifndef sample_data_h
 #define sample_data_h
 
+// Index, Petal_length, Petal_width
+
 float data[][3] = {
     0,322.0,126.0,
     1,2401.0,1138.0,
@@ -1020,5 +1022,9 @@ float data[][3] = {
     1008,1189.0,349.0,
     1009,555.0,197.0,
     1010,8768.0,3293.0};
+
+
+
+
 
 #endif /* sample_data_h */
