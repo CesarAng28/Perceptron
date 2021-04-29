@@ -54,13 +54,13 @@ float Linear_Regression_RMS(float *predict, float *target, size_t n_values);
 
 float * Linear_Regression_predict(float *params, size_t Batch_Size, size_t n_params, float features[Batch_Size][n_params]);
 
-float Linear_Regression_Hebbian(float *features, size_t n_features, float *predictions, size_t n_predict, float * target, float * hyper, float *params);
+void Linear_Regression_Hebbian(size_t n_params, float params[n_params], float features[n_params], float error, float hyper[n_params]);
 
 void Linear_Regression_set_weights(Linear_Regression *regression);
 
 Linear_Regression * Linear_Regression_generator(size_t n_params, size_t epochs, float *Learning_rate, uint16_t Batch_size);
 
-float * Linear_Regression_fit(float *params, size_t n_params, size_t Batch_size, float features[Batch_size][n_params] , float *target, size_t epochs, float *learning_rate);
+float * Linear_Regression_fit(float *params, size_t n_params, size_t epochs, size_t Batch_size, float features[Batch_size*epochs][n_params] , float *target, float *learning_rate);
 
 
 void Linear_regression_set_activation(Linear_Regression *regression, DECISION_FUN new_activation);

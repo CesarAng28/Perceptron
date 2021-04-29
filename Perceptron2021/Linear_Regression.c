@@ -55,8 +55,8 @@ float * Linear_Regression_predict(float *params, size_t Batch_Size, size_t n_par
     
     
     for(size_t observation=0; observation < Batch_Size; observation++){
-        
-        result[observation] = Linear_Algebra_Dot(&features[observation][n_params], params, n_params);
+                                                                // Ws
+        result[observation] = Linear_Algebra_Dot(features[observation], params, n_params);
     }
     
     return result;
@@ -66,15 +66,22 @@ float * Linear_Regression_predict(float *params, size_t Batch_Size, size_t n_par
 // predictors(Ws, n_w, X, n_x, Y, n_y, )
 float * Linear_Regression_fit(float *params, size_t n_params, size_t epochs, size_t Batch_size, float features[Batch_size*epochs][n_params] , float *target, float *learning_rate){
     
+    
+    
     float * _error = NULL;
     float * _result = NULL;
-    uint16_t index = 0;
+
     
     _error = Linear_Algebra_Vector(epochs);
     
     for(size_t _epoch=0; _epoch < epochs; _epoch++){
         _result = Linear_Regression_predict(params, Batch_size, n_params, features);
-        _error[index] = Linear_Regression_Hebbian(params, features[Batch_size][n_params],_result, Batch_size, target, learning_rate, params);
+        
+        _error[_epoch] = Linear_Regression_RMS(_result, target, Batch_size);
+        
+        for(size_t obs = 0; obs<Batch_size; obs++){
+            Linear_Regression_Hebbian(n_params, params, features[obs], _error[_epoch], learning_rate);
+        }
             
     }
 
@@ -83,16 +90,13 @@ float * Linear_Regression_fit(float *params, size_t n_params, size_t epochs, siz
 }
 
 
-float Linear_Regression_Hebbian(float *params, float *features, size_t n_params, float *predictions, size_t n_predict, float * target, float * hyper){
+void Linear_Regression_Hebbian(size_t n_params, float params[n_params], float features[n_params], float error, float hyper[n_params]){
     
-    float error =0;
-    error = Linear_Regression_RMS(predictions, target, n_predict);
 
     for(size_t param=0; param< n_params; param++){
-        params[param] -= hyper[param]*1.0/(float)n_predict*features[param];
+        params[param] -= hyper[param]*error* features[param];
+// W[param] = w[param] -hyper_n[param] * E * X[param]
     }
-    return error;
-    
 }
 
 
@@ -111,10 +115,10 @@ Linear_Regression * Linear_Regression_generator(size_t n_params, size_t epochs, 
     my_regression->activation = Linear_Regression_relu;
     my_regression->epochs = epochs;
     my_regression->error = malloc(sizeof(float)*Batch_size);
-    my_regression->eval= Linear_Regression_predict;
+    //my_regression->eval= Linear_Regression_predict;
     my_regression->loss=NULL;
     my_regression->n_params=n_params;
-    my_regression->train = Linear_Regression_fit;
+    //my_regression->train = Linear_Regression_fit;
     Linear_Regression_set_weights(my_regression);
     
     return my_regression;
