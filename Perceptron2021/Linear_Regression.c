@@ -64,23 +64,26 @@ float * Linear_Regression_predict(float *params, size_t Batch_Size, size_t n_par
 }
 
 // predictors(Ws, n_w, X, n_x, Y, n_y, )
-float * Linear_Regression_fit(float *params, size_t n_params, size_t epochs, size_t Batch_size, float features[Batch_size*epochs][n_params] , float *target, float *learning_rate){
+float * Linear_Regression_fit(float *params, size_t n_params, size_t epochs, size_t Batch_size, uint16_t observations, float features[observations][n_params] , float *target, float *learning_rate){
     
     
     
     float * _error = NULL;
     float * _result = NULL;
+    float ** _random_features = NULL;
 
     
     _error = Linear_Algebra_Vector(epochs);
     
     for(size_t _epoch=0; _epoch < epochs; _epoch++){
-        _result = Linear_Regression_predict(params, Batch_size, n_params, features);
+        
+        _random_features = Statistics_random_sampling(0,  observations, Batch_size, n_params, (float **)features);
+        _result = Linear_Regression_predict(params, Batch_size, n_params, (float (*)[n_params])_random_features);
         
         _error[_epoch] = Linear_Regression_RMS(_result, target, Batch_size);
         
         for(size_t obs = 0; obs<Batch_size; obs++){
-            Linear_Regression_Hebbian(n_params, params, features[obs], _error[_epoch], learning_rate);
+            Linear_Regression_Hebbian(n_params, params, ((float(*) [n_params])(_random_features))[obs], _error[_epoch], learning_rate);
         }
             
     }
@@ -158,3 +161,4 @@ void Linear_Regression_print_results(float * results, uint16_t n_data){
         printf("\t %d = %f \n",element, results[element]);
     }
 }
+

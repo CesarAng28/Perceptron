@@ -47,4 +47,11 @@ float **Linear_Algebra_fTensor(uint16_t rows, uint16_t columns){
     return my_tensor;
 }
 
+uint16_t *Linear_Algebra_IVector(size_t n_members){
+    uint16_t *my_vector = NULL;
+    
+    my_vector = calloc(n_members, sizeof(uint16_t));
+    
+    return my_vector;
+}
 

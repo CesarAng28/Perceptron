@@ -12,20 +12,22 @@
 #include "Linear_Regression.h"
 #include "iris_dataset.h"
 
-#define EPOCHS 4
+#define EPOCHS 20
 
 
 int main(int argc, const char * argv[]){
     // insert code here...
     printf("Hello, World!\n");
     
-    float learning_rate[] = {0.0005,0.0005,0.0005};
+    float learning_rate[] = {0.002,0.002,0.002};
     
-    size_t BATCH_SIZE=32, PARAMS =2;
+    size_t BATCH_SIZE=15, PARAMS =3;
     
     float *result = NULL;
     
     float *error = NULL;
+    
+    uint16_t observations = sizeof(iris_data)/sizeof(iris_data[0]);
     
     Linear_Regression * my_regression = NULL;
     
@@ -55,10 +57,10 @@ int main(int argc, const char * argv[]){
     
     Linear_Regression_print_results(result, BATCH_SIZE);
     
-    error=Linear_Regression_fit(my_regression->params, PARAMS, EPOCHS, BATCH_SIZE, iris_data, iris_targets, learning_rate);
+    error=Linear_Regression_fit(my_regression->params, PARAMS, EPOCHS, BATCH_SIZE, observations, iris_data, iris_targets, learning_rate);
     
     Linear_Regression_print_results(error, EPOCHS);
-    
+    Linear_regression_get_weights(my_regression);
     free(result);
     return 0;
 }
